@@ -1,9 +1,8 @@
 from flask import Flask, jsonify, request
 from paquete import paquetesl
+from init import app
 
-paquetes = Flask(__name__)
-
-@paquetes.route('/paquetes',methods = ['POST'])
+@app.route('/paquetes',methods = ['POST'])
 def newpaquete():
   newp = {
             "id":request.json['id'],
@@ -14,14 +13,14 @@ def newpaquete():
   paquetesl.append(newp)
   return jsonify({"message": "Paquete agregado correctamente", "Paquete": paquetesl})
 
-@paquetes.route('/paquetes/<int:id>',methods = ['GET'])
+@app.route('/paquetes/<int:id>',methods = ['GET'])
 def buscapaquete(id):
   PFound = [bpaquete for bpaquete in paquetesl if bpaquete['id'] == id]
   if(len(PFound)>0):
     return jsonify({"message": "Paquete Encontrado", "Cliente": PFound[0]})
   return jsonify({"message": "Error"})
 
-@paquetes.route('/paquetes/<int:id>',methods = ['PUT'])
+@app.route('/paquetes/<int:id>',methods = ['PUT'])
 def uppaquete(id):
   PFound = [bpaquete for bpaquete in paquetesl if bpaquete['id'] == id]
   if(len(PFound)>0):
@@ -30,7 +29,3 @@ def uppaquete(id):
     PFound[0]["trayectoria"]=request.json['trayectoria']
     return jsonify({"message": "Paquete Actualizado", "Cliente": PFound[0]})
   return jsonify({"message": "Error"})
-
-
-if __name__ == '__main__':
-    paquetes.run(debug=True, port=4000)

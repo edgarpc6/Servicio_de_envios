@@ -3,10 +3,9 @@ from clientes import clientel
 from datetime import datetime
 from facturas import factural
 from paquete import paquetesl
+from init import app
 
-factura = Flask(__name__)
-
-@factura.route('/facturas',methods = ['POST'])
+@app.route('/facturas',methods = ['POST'])
 def aggfactura():
   items = []
   total = 0.0
@@ -31,14 +30,14 @@ def aggfactura():
   factural.append(newf)
   return jsonify({"message": "Factura generada correctamente", "Factura": newf})
 
-@factura.route('/facturas/<int:id>',methods = ['GET'])
+@app.route('/facturas/<int:id>',methods = ['GET'])
 def buscfact(id):
   FFound = [bfactura for bfactura in factural if bfactura['id'] == id]
   if(len(FFound)>0):
     return jsonify({"message": "Factura Encontrada", "Factura": FFound[0]})
   return jsonify({"message": "Error"})
 
-@factura.route('/facturas/<int:id>',methods = ['DELETE'])
+@app.route('/facturas/<int:id>',methods = ['DELETE'])
 def delfact(id):
   FFound = [bfactura for bfactura in factural if bfactura['id'] == id]
   if(len(FFound)>0):
@@ -46,8 +45,8 @@ def delfact(id):
     return jsonify({"message": "Factura Eliminada", "Lista de Facturas": factural})
   return jsonify({"message": "Error"})
 
-@factura.route('/facturas/<int:id>', methods = ['PUT'])
-def actualizarCliente(id):
+@app.route('/facturas/<int:id>', methods = ['PUT'])
+def actualizarFactura(id):
   FFound = [bfactura for bfactura in factural if bfactura['id'] == id]
   if  (len(FFound)>0):  
     nc = {
@@ -70,8 +69,3 @@ def actualizarCliente(id):
     FFound[0]['total']:total
     return jsonify({"message": "Factura Actualizada", "Factura": FFound[0]})
   return jsonify({"message": "Error"})
-
-
-
-if __name__ == '__main__':
-    factura.run(debug=True, port=4000)

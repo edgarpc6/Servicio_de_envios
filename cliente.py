@@ -1,9 +1,8 @@
 from flask import Flask, jsonify, request
 from clientes import clientel
+from init import app
 
-cliente = Flask(__name__)
-
-@cliente.route('/clientes',methods = ['POST'])
+@app.route('/clientes',methods = ['POST'])
 def aggcliente():
   newc = {
             "id":request.json['id'],
@@ -15,14 +14,14 @@ def aggcliente():
   clientel.append(newc)
   return jsonify({"message": "Cliente agregado correctamente", "Clientes": clientel})
 
-@cliente.route('/clientes/<int:id>',methods = ['GET'])
+@app.route('/clientes/<int:id>',methods = ['GET'])
 def buscliente(id):
   CFound = [bcliente for bcliente in clientel if bcliente['id'] == id]
   if(len(CFound)>0):
     return jsonify({"message": "Cliente Encontrado", "Cliente": CFound[0]})
   return jsonify({"message": "Error"})
 
-@cliente.route('/clientes/<int:id>', methods = ['PUT'])
+@app.route('/clientes/<int:id>', methods = ['PUT'])
 def actualizarCliente(id):
   c = [bcliente for bcliente in clientel if bcliente['id'] == id]
   if  (len(c)>0):
@@ -33,7 +32,3 @@ def actualizarCliente(id):
     return jsonify({"message": "Cliente Actualizado", "Cliente": c[0]})
   return jsonify({"message": "Error"})
 
-
-
-if __name__ == '__main__':
-    cliente.run(debug=True, port=4000)
